@@ -67,6 +67,33 @@ static Nextpeer_iOSDelegate* _nextpeer_ios_delegate_instance = nil;
     // Nextpeer bug that allows P2P packets between the "will" and "did" callbacks.
 }
 
+-(void)nextpeerDidReceiveTournamentStatus:(NPTournamentStatusInfo *)tournamentStatus {
+    TournamentStatusUpdateData *statusUpdate = new TournamentStatusUpdateData();
+    
+    CCArray* players = CCArray::createWithCapacity([tournamentStatus.sortedResults count]);
+    for (NPTournamentPlayerResults* playerResults in tournamentStatus.sortedResults) {
+        string playerName([playerResults.player.playerName UTF8String]);
+        string playerId([playerResults.player.playerId UTF8String]);
+        string playerImageUrl([playerResults.player.playerImageUrl UTF8String]);
+        bool didForfeit = playerResults.didForfeit;
+        bool isStillPlaying = playerResults.isStillPlaying;
+        uint32_t score = playerResults.score;
+        TournamentPlayerResultsData *resultsData = new TournamentPlayerResultsData();
+        resultsData->setPlayerName(playerName);
+        resultsData->setPlayerId(playerId);
+        resultsData->setPlayerName(playerImageUrl);
+        resultsData->setDidForfeit(didForfeit);
+        resultsData->setIsStillPlaying(isStillPlaying);
+        resultsData->setScore(score);
+        players->addObject(resultsData);
+    }
+    
+    players->retain();
+    statusUpdate->sortedResults = players;
+    
+    statusUpdate->autorelease();
+    NextpeerNotifier::getInstance()->broadcastReceiveTournamentStatusUpdate(statusUpdate);
+}
 -(BOOL)nextpeerSupportsTournamentWithId:(NSString* )tournamentUuid {
     string uuid([tournamentUuid UTF8String]);
     return NextpeerTournamentSupport::getInstance()->isTournamentSupported(uuid);

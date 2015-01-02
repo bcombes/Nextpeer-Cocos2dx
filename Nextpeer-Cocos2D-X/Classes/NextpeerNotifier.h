@@ -19,6 +19,7 @@ namespace nextpeer {
         void broadcastTournamentStarted(TournamentStartData* tournamentStartData);
         void broadcastTournamentEnded();
         void broadcastReceiveSynchronizedEvent(CCString* eventName);
+        void broadcastReceiveTournamentStatusUpdate(TournamentStatusUpdateData *statusUpdateData);
         
         // Tournament specific
         void broadcastIncomingTournamentDataPacket(TournamentP2PData* data);

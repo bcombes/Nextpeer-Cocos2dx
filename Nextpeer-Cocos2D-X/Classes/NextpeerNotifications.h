@@ -16,6 +16,7 @@ USING_NS_CC;
 // Notifications
 #define NEXTPEER_NOTIFICATION_TOURNAMENT_STARTED "nextpeer_tournament_started"
 #define NEXTPEER_NOTIFICATION_TOURNAMENT_ENDED "nextpeer_tournament_ended"
+#define NEXTPEER_NOTIFICATION_RECEIVE_TOURNAMENT_STATUS_UPDATE "nextpeer_receive_tournament_status_update"
 #define NEXTPEER_NOTIFICATION_RECEIVE_SYNCHRONIZED_EVENT "nextpeer_receive_synchronized_event"
 
 #define NEXTPEER_NOTIFICATION_INCOMING_DATA_PACKET "nextpeer_incoming_data_packet"
@@ -47,6 +48,31 @@ namespace nextpeer {
         unsigned int numberOfPlayers;
         CCArray* players;
     };
+    
+    class TournamentPlayerResultsData : public CCObject
+    {
+    public:
+        CC_SYNTHESIZE(string, mPlayerName, PlayerName);
+        CC_SYNTHESIZE(string, mPlayerId, PlayerId);
+        CC_SYNTHESIZE(string, mPlayerImageUrl, PlayerImageUrl);
+        CC_SYNTHESIZE(bool, mIsStillPlaying, IsStillPlaying);
+        CC_SYNTHESIZE(bool, mDidForfeit, DidForfeit);
+        CC_SYNTHESIZE(uint32_t, mScore, Score);
+    };
+    
+    class TournamentStatusUpdateData : public CCObject
+    {
+    public:
+        virtual ~TournamentStatusUpdateData()
+        {
+            CC_SAFE_RELEASE_NULL(sortedResults);
+        }
+        
+    public:
+        /// And array of TournamentPlayerResultsData objects, sorted by player ranks in ascending order (player at index 0 is ranked first).
+        CCArray* sortedResults;
+    };
+
 
     enum  NextpeerDataChannel { CHANNEL_RELIABLE = 0, CHANNEL_UNRELIABLE = 1 };
 

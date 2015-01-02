@@ -47,6 +47,15 @@ namespace nextpeer
 #else
         CCNotificationCenter::sharedNotificationCenter()->postNotification(NEXTPEER_NOTIFICATION_TOURNAMENT_STARTED, tournamentStartData);
 #endif
+    }
+    
+    void NextpeerNotifier::broadcastReceiveTournamentStatusUpdate(TournamentStatusUpdateData *statusUpdateData) {
+        
+#ifdef USE_EVENT_QUEUE
+        NextpeerEventQueue::getInstance()->addToQueue(string(NEXTPEER_NOTIFICATION_RECEIVE_TOURNAMENT_STATUS_UPDATE), statusUpdateData);
+#else
+        CCNotificationCenter::sharedNotificationCenter()->postNotification(NEXTPEER_NOTIFICATION_RECEIVE_TOURNAMENT_STATUS_UPDATE, statusUpdateData);
+#endif
         
     }
     
@@ -79,7 +88,6 @@ namespace nextpeer
     
     void NextpeerNotifier::broadcastDashboardWillAppear()
     {
-        cocos2d::CCDirector::sharedDirector()->pause();
 #ifdef USE_EVENT_QUEUE
         NextpeerEventQueue::getInstance()->addToQueue(string(NEXTPEER_NOTIFICATION_DASHBOARD_WILL_APPEAR), NULL);
 #else
@@ -89,7 +97,6 @@ namespace nextpeer
     
     void NextpeerNotifier::broadcastDashboardWillDisappear()
     {
-        cocos2d::CCDirector::sharedDirector()->resume();
 #ifdef USE_EVENT_QUEUE
         NextpeerEventQueue::getInstance()->addToQueue(string(NEXTPEER_NOTIFICATION_DASHBOARD_WILL_DISAPPEAR), NULL);
 #else
